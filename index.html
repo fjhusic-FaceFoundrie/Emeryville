@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emeryville Face Foundrié Dashboard</title>
+<style>
+  :root { color-scheme: light; }
+
+  .ff-dash {
+    --ivory: #FAF6F0;
+    --stone: #EAE2D6;
+    --stone-dark: #DDD1BC;
+    --charcoal: #2B3129;
+    --charcoal-soft: #5B6355;
+    --sage: #8FA085;
+    --sage-dark: #5F7256;
+    --sage-light: #E4EAE0;
+    --clay: #C08B72;
+    --clay-dark: #A9694E;
+    --clay-light: #F1E1D8;
+    --gold: #C9A66B;
+    --white: #FFFFFF;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--ivory);
+    color: var(--charcoal);
+    min-height: 100vh;
+    padding: 32px 24px 60px;
+    box-sizing: border-box;
+  }
+  .ff-dash * { box-sizing: border-box; }
+  .ff-serif { font-family: 'Fraunces', Georgia, serif; }
+  .ff-wrap { max-width: 1180px; margin: 0 auto; }
+
+  .ff-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .ff-brand-eyebrow { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sage-dark); font-weight: 600; margin-bottom: 6px; }
+  .ff-brand-title { font-size: 34px; font-weight: 600; line-height: 1.1; margin: 0; }
+  .ff-brand-sub { font-size: 14px; color: var(--charcoal-soft); margin-top: 6px; }
+
+  .ff-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .ff-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 16px; border-radius: 999px; font-size: 13.5px; font-weight: 600; border: 1px solid var(--stone-dark); background: var(--white); color: var(--charcoal); cursor: pointer; transition: all .15s ease; white-space: nowrap; }
+  .ff-btn:hover { border-color: var(--sage-dark); color: var(--sage-dark); }
+  .ff-btn.ff-btn-primary { background: var(--charcoal); color: var(--white); border-color: var(--charcoal); }
+  .ff-btn.ff-btn-primary:hover { background: var(--sage-dark); border-color: var(--sage-dark); color: white; }
+  .ff-btn.ff-btn-ghost { background: transparent; border-color: transparent; }
+
+  .ff-banner { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; border-radius: 14px; font-size: 13.5px; margin-bottom: 20px; }
+  .ff-banner.success { background: var(--sage-light); color: var(--sage-dark); }
+  .ff-banner.error { background: var(--clay-light); color: var(--clay-dark); }
+  .ff-banner button { margin-left: auto; background: none; border: none; cursor: pointer; color: inherit; opacity: 0.6; }
+  .ff-banner button:hover { opacity: 1; }
+
+  .ff-dropzone { border: 1.5px dashed var(--stone-dark); border-radius: 18px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 24px; background: var(--white); transition: all .15s ease; }
+  .ff-dropzone.drag { border-color: var(--sage-dark); background: var(--sage-light); }
+  .ff-dropzone-icon { width: 38px; height: 38px; border-radius: 12px; background: var(--stone); display: flex; align-items: center; justify-content: center; color: var(--sage-dark); flex-shrink: 0; }
+  .ff-dropzone-text { font-size: 13.5px; color: var(--charcoal-soft); flex: 1; }
+  .ff-dropzone-text b { color: var(--charcoal); }
+
+  .ff-top-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+  .ff-top-card { background: linear-gradient(135deg, var(--white), var(--stone) 160%); border-radius: 18px; padding: 16px 18px; box-shadow: 0 2px 10px rgba(43,49,41,0.05); position: relative; overflow: hidden; }
+  .ff-top-card-label { display: flex; align-items: center; gap: 6px; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--sage-dark); font-weight: 700; margin-bottom: 8px; }
+  .ff-top-card-name { font-size: 18px; font-weight: 600; font-family: 'Fraunces', serif; }
+  .ff-top-card-value { font-size: 13.5px; color: var(--charcoal-soft); margin-top: 2px; }
+  .ff-top-card-empty { font-size: 13.5px; color: var(--charcoal-soft); font-style: italic; }
+
+  .ff-grid { display: grid; grid-template-columns: 1.65fr 1fr; gap: 20px; margin-bottom: 28px; }
+  @media (max-width: 880px) { .ff-grid { grid-template-columns: 1fr; } .ff-top-strip { grid-template-columns: 1fr; } }
+
+  .ff-card { background: var(--white); border-radius: 22px; padding: 22px; box-shadow: 0 2px 14px rgba(43,49,41,0.06); }
+  .ff-card-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; margin: 0 0 16px; }
+
+  .ff-roster-row { display: grid; grid-template-columns: 1.4fr 0.85fr 0.85fr 0.75fr; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--stone); }
+  .ff-roster-row:first-of-type { border-top: none; }
+  .ff-roster-name { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 14px; }
+  .ff-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--stone); color: var(--sage-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; font-family: 'Fraunces', serif; flex-shrink: 0; }
+  .ff-roster-type { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--charcoal-soft); background: var(--stone); border-radius: 6px; padding: 1px 6px; margin-left: 6px; font-weight: 700; }
+  .ff-roster-kpi { text-align: right; }
+  .ff-roster-kpi-value { font-size: 14px; font-weight: 700; }
+  .ff-roster-kpi-label { font-size: 10px; color: var(--charcoal-soft); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .ff-kpi-summary { display: flex; flex-direction: column; gap: 14px; }
+  .ff-kpi-card { background: var(--white); border-radius: 22px; padding: 20px; box-shadow: 0 2px 14px rgba(43,49,41,0.06); }
+  .ff-kpi-card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .ff-kpi-card-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--charcoal-soft); font-weight: 700; }
+  .ff-kpi-card-value { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; }
+  .ff-kpi-card-goal { font-size: 12px; color: var(--charcoal-soft); margin-top: 2px; }
+
+  .ff-pace-card { background: var(--charcoal); color: var(--ivory); border-radius: 22px; padding: 20px; }
+  .ff-pace-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--stone); font-weight: 700; margin-bottom: 10px; }
+  .ff-pace-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; color: var(--stone); }
+  .ff-pace-track { position: relative; height: 8px; background: rgba(255,255,255,0.15); border-radius: 999px; margin-top: 10px; }
+  .ff-pace-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px; background: var(--sage); }
+  .ff-pace-marker { position: absolute; top: -3px; width: 2px; height: 14px; background: var(--gold); }
+
+  .ff-petal-track { background: var(--stone); border-radius: 999px; height: 10px; overflow: hidden; position: relative; flex: 1; }
+  .ff-petal-fill { height: 100%; border-radius: 999px; transition: width .6s ease; background: var(--sage); }
+
+  .ff-section { background: var(--white); border-radius: 22px; padding: 24px; box-shadow: 0 2px 14px rgba(43,49,41,0.06); margin-bottom: 18px; }
+  .ff-section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; flex-wrap: wrap; gap: 6px; }
+  .ff-section-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin: 0; }
+  .ff-section-goal { font-size: 13px; color: var(--charcoal-soft); }
+
+  .ff-progress-row { display: grid; grid-template-columns: 1.3fr 2fr auto; align-items: center; gap: 16px; padding: 11px 0; border-top: 1px solid var(--stone); }
+  .ff-progress-row:first-of-type { border-top: none; }
+  .ff-progress-name { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .ff-progress-detail { display: flex; align-items: center; gap: 10px; }
+  .ff-progress-numbers { font-size: 12px; color: var(--charcoal-soft); min-width: 150px; }
+  .ff-progress-pct { font-size: 12.5px; font-weight: 700; width: 42px; text-align: right; }
+  .ff-status-pill { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+  @media (max-width: 700px) {
+    .ff-progress-row { grid-template-columns: 1fr; gap: 6px; }
+    .ff-progress-detail { width: 100%; }
+  }
+
+  .ff-drawer-backdrop { position: fixed; inset: 0; background: rgba(43,49,41,0.6); z-index: 40; }
+  .ff-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 100vw); background: var(--white); border-left: 1px solid var(--stone-dark); z-index: 41; box-shadow: -12px 0 40px rgba(0,0,0,0.25); overflow-y: auto; padding: 26px; }
+  .ff-drawer-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+  .ff-drawer-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin: 0; }
+  .ff-drawer-close { background: var(--white); border: 1px solid var(--stone-dark); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .ff-drawer-section { margin-bottom: 26px; }
+  .ff-drawer-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sage-dark); font-weight: 700; margin-bottom: 10px; }
+  .ff-drawer-goal-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; }
+  .ff-drawer-goal-row label { font-size: 13.5px; font-weight: 600; }
+  .ff-input { border: 1px solid var(--stone-dark); border-radius: 10px; padding: 8px 10px; font-size: 13.5px; font-family: 'Inter', sans-serif; background: var(--white); color: var(--charcoal); width: 100%; }
+  .ff-input-goal { max-width: 130px; text-align: right; }
+
+  .ff-roster-edit-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .ff-toggle { display: flex; border: 1px solid var(--stone-dark); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .ff-toggle button { border: none; background: var(--white); padding: 8px 10px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--charcoal-soft); }
+  .ff-toggle button.active { background: var(--sage-dark); color: white; }
+  .ff-icon-btn { background: none; border: none; cursor: pointer; color: var(--charcoal-soft); padding: 6px; border-radius: 8px; display: flex; }
+  .ff-icon-btn:hover { color: var(--clay-dark); background: var(--clay-light); }
+
+  .ff-mapping-modal-backdrop { position: fixed; inset: 0; background: rgba(43,49,41,0.4); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .ff-mapping-modal { background: var(--white); border-radius: 20px; padding: 28px; max-width: 460px; width: 100%; max-height: 85vh; overflow-y: auto; }
+  .ff-mapping-field { margin-bottom: 14px; }
+  .ff-mapping-field label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 5px; color: var(--charcoal-soft); text-transform: uppercase; letter-spacing: 0.05em; }
+  select.ff-input { appearance: none; }
+
+  .ff-footer-note { text-align: center; font-size: 12px; color: var(--charcoal-soft); margin-top: 20px; }
+
+  .ff-daily-calendar { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ff-daily-dot { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .ff-daily-dot.hit { background: var(--sage-dark); color: #ffffff; }
+  .ff-daily-dot.miss { background: var(--clay-dark); color: #ffffff; }
+  .ff-daily-dot.pending { background: var(--white); color: var(--charcoal-soft); border: 1.5px dashed var(--stone-dark); }
+  .ff-daily-legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+  .ff-daily-legend-dot.hit { background: var(--sage-dark); }
+  .ff-daily-legend-dot.miss { background: var(--clay-dark); }
+  .ff-daily-legend-dot.pending { background: var(--white); border: 1.5px dashed var(--stone-dark); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+/* ---------------------------------------------------------------- */
+/* Tokens & sample data                                              */
+/* ---------------------------------------------------------------- */
+
+const WEIGHTS = { FT: 2, PT: 1 };
+const DEFAULT_GOALS = { service: 90000, retail: 14000, membership: 45 };
+// Front Bar does not track Service Sales (they're front desk, not
+// estheticians) and is NOT weighted-pooled like the main team - per FJ,
+// every Front Bar person (FT or PT alike) has the same flat monthly target:
+// $170 Retail Sales and 2 Memberships Sold. Adjust anytime in Settings.
+const DEFAULT_FRONTBAR_GOALS = { retail: 170, membership: 2 };
+// Store-wide daily retail push target Front Bar is responsible for keeping
+// the WHOLE team (Estheticians + Managers + Front Bar combined) above each
+// day - drives the daily circle calendar under the Front Bar section.
+const DAILY_RETAIL_TARGET = 500;
+
+const SAMPLE_ROSTER = [
+  { id: "e1", name: "Laila Anderson", type: "FT" },
+  { id: "e2", name: "Sophia Martinez", type: "FT" },
+  { id: "e3", name: "Ava Chen", type: "PT" },
+  { id: "e4", name: "Isabella Rossi", type: "FT" },
+  { id: "e5", name: "Maya Thompson", type: "PT" },
+  { id: "e6", name: "Grace Kim", type: "FT" },
+];
+
+const SAMPLE_SALES = {
+  "Laila Anderson": { service: 14200, retail: 2100, membership: 7 },
+  "Sophia Martinez": { service: 11800, retail: 1650, membership: 5 },
+  "Ava Chen": { service: 6200, retail: 780, membership: 2 },
+  "Isabella Rossi": { service: 13100, retail: 1900, membership: 6 },
+  "Maya Thompson": { service: 5400, retail: 620, membership: 3 },
+  "Grace Kim": { service: 12750, retail: 1450, membership: 4 },
+};
+
+const SAMPLE_FRONTBAR_ROSTER = [
+  { id: "fb1", name: "Elena Carlson", type: "FT" },
+  { id: "fb2", name: "Isabelle Moes", type: "PT" },
+];
+
+const SAMPLE_FRONTBAR_SALES = {
+  "Elena Carlson": { retail: 1400, membership: 3 },
+  "Isabelle Moes": { retail: 900, membership: 1 },
+};
+
+/* DAILY_SNAPSHOT_START - rewritten automatically each morning by the
+   Emeryville Daily Download scheduled task. Do not hand-edit this block -
+   the injector script (scripts/inject_snapshot.py) replaces everything
+   between these two marker comments as one unit. asOf is a YYYY-MM-DD
+   string; sales keys match the roster's "First Last" name format. Until
+   the first scheduled run happens, asOf stays null and the dashboard
+   behaves exactly as before (sample data / manual upload only). */
+const DAILY_SNAPSHOT = {"asOf": "2026-07-13", "sales": {"Anaya Bonavente": {"service": 1273.91, "retail": 212.0, "membership": 1}, "Ashley Giron": {"service": 914.03, "retail": 216.9, "membership": 1}, "Bryn McGowan": {"service": 1836.31, "retail": 34.0, "membership": 1}, "Elena Carlson": {"service": 0.0, "retail": 76.5, "membership": 1}, "Evelin Sandoval": {"service": 2533.09, "retail": 491.3, "membership": 0}, "Isabelle Moes": {"service": 0.0, "retail": 287.3, "membership": 0}, "Kim Anderson": {"service": 1033.66, "retail": 79.2, "membership": 0}, "Laila Anderson": {"service": 2833.45, "retail": 166.19, "membership": 2}, "Lani Gauna": {"service": 0.0, "retail": 374.4, "membership": 1}, "Lyric Brown": {"service": 3624.38, "retail": 499.86, "membership": 2}, "Sonu Sunar": {"service": 831.17, "retail": 131.4, "membership": 0}, "Terrilyn Williams": {"service": 769.17, "retail": 44.1, "membership": 1}, "Tyiemah Dominick": {"service": 2133.91, "retail": 148.3, "membership": 0}}};
+/* DAILY_SNAPSHOT_END */
+
+/* MONTH_RESET_START - rewritten by the Emeryville Dashboard Month Reset
+   skill (scripts/inject_month_reset.py) each time FJ (or the monthly
+   scheduled task) starts a fresh month. Do not hand-edit this block - the
+   injector replaces everything between these two marker comments as one
+   unit. asOf is a YYYY-MM-DD string (the date the reset was run); mainRoster
+   holds Estheticians + Managers (from the Emeryville Schedule Pull CSV,
+   PT/FT already computed there); frontBarRoster holds Front Bar staff (PT/FT
+   computed the same way, at 130+ monthly scheduled hours = FT, since the
+   schedule-pull CSV itself leaves Front Bar's PT/FT blank by design). On
+   load, if asOf is newer than the last-applied reset already stored in this
+   browser, the dashboard wipes ALL sales figures and REPLACES both rosters
+   with these lists - but leaves both teams' Monthly Goals untouched, since
+   goals are meant to roll over from month to month. Until the first reset
+   runs, asOf stays null and the dashboard behaves exactly as before. */
+const MONTH_RESET = { asOf: null, mainRoster: [], frontBarRoster: [] };
+/* MONTH_RESET_END */
+
+/* DAILY_RETAIL_LOG_START - rewritten automatically each morning by the
+   Emeryville Daily Download scheduled task, alongside DAILY_SNAPSHOT. Do
+   not hand-edit this block - the injector script (scripts/inject_snapshot.py)
+   merges one new day's COMBINED (Estheticians + Managers + Front Bar, not
+   just Front Bar) retail dollar total into this dict each run, keyed by a
+   "YYYY-MM-DD" date string. Unlike DAILY_SNAPSHOT (a cumulative
+   month-to-date total), each value here is that SPECIFIC day's retail
+   sales, computed as the difference between two consecutive cumulative
+   snapshots. Cleared automatically when the Emeryville Dashboard Month
+   Reset skill runs. Drives the daily $500 push calendar under the Front
+   Bar section. */
+const DAILY_RETAIL_LOG = {"2026-07-13": 291.96};
+/* DAILY_RETAIL_LOG_END */
+
+const FIELD_ALIASES = {
+  name: ["name", "esthetician", "employee", "staff", "provider", "tech", "employee name"],
+  service: ["service sales", "service", "services", "service revenue", "servicesales", "service $"],
+  retail: ["retail sales", "retail", "product sales", "retailsales", "retail $"],
+  membership: ["memberships sold", "memberships", "membership sales", "membership count", "membershipssold", "memberships #"],
+};
+
+const CATEGORY_META = {
+  service: { label: "Service Sales", format: "currency" },
+  retail: { label: "Retail Sales", format: "currency" },
+  membership: { label: "Memberships Sold", format: "number" },
+};
+
+// Front Bar does not sell services, so it only tracks these two categories -
+// no Service Sales card/goal for this team.
+const FRONTBAR_CATEGORY_META = {
+  retail: { label: "Retail Sales", format: "currency" },
+  membership: { label: "Memberships Sold", format: "number" },
+};
+
+const STATUS_STYLE = {
+  "Goal Hit": { bg: "var(--gold)", fg: "#ffffff" },
+  "Ahead of Goal": { bg: "var(--sage-dark)", fg: "#ffffff" },
+  "On Track": { bg: "var(--sage-light)", fg: "var(--sage-dark)" },
+  "Almost There": { bg: "var(--clay-light)", fg: "var(--clay-dark)" },
+  "Behind Pace": { bg: "var(--clay-dark)", fg: "#ffffff" },
+};
+
+const ICONS = {
+  settings: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+  upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  award: '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
+  alertCircle: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+  checkCircle2: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  trash2: '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+  sparkles: '<path d="M12 3l1.8 4.9L18.5 9.7l-4.7 1.8L12 16.4l-1.8-4.9L5.5 9.7l4.7-1.8L12 3z"/><path d="M19 3l.6 1.6L21 5.2l-1.4.6L19 7.4l-.6-1.6L17 5.2l1.4-.6L19 3z"/><path d="M5 15l.5 1.4L7 17l-1.5.6L5 19l-.5-1.4L3 17l1.5-.6L5 15z"/>',
+  rotateCcw: '<path d="M3 2v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L3 8"/>',
+  info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+};
+
+function icon(name, size) {
+  size = size || 15;
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">' + (ICONS[name] || '') + '</svg>';
+}
+
+/* ---------------------------------------------------------------- */
+/* Helpers                                                           */
+/* ---------------------------------------------------------------- */
+
+function normalizeHeader(h) {
+  return String(h || "").trim().toLowerCase().replace(/[_\-]/g, " ").replace(/\s+/g, " ");
+}
+
+function autoMapColumns(headers) {
+  const map = {};
+  const normalized = headers.map(normalizeHeader);
+  Object.entries(FIELD_ALIASES).forEach(([field, aliases]) => {
+    const idx = normalized.findIndex((h) => aliases.includes(h));
+    if (idx !== -1) map[field] = headers[idx];
+  });
+  return map;
+}
+
+function parseNumber(val) {
+  if (typeof val === "number") return val;
+  if (val == null) return 0;
+  const cleaned = String(val).replace(/[$,\s]/g, "");
+  const n = parseFloat(cleaned);
+  return isNaN(n) ? 0 : n;
+}
+
+function formatValue(val, format) {
+  if (format === "currency") return "$" + Math.round(val).toLocaleString();
+  return Math.round(val).toLocaleString();
+}
+
+function daysInMonth(year, monthIndex) {
+  return new Date(year, monthIndex + 1, 0).getDate();
+}
+
+function getStatusLabel(progressPct, expectedPct) {
+  if (progressPct >= 100) return "Goal Hit";
+  const diff = progressPct - expectedPct;
+  if (diff >= 15) return "Ahead of Goal";
+  if (diff >= -10) return "On Track";
+  if (diff >= -25) return "Almost There";
+  return "Behind Pace";
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = "", inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; } else { inQuotes = false; }
+      } else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ",") { row.push(field); field = ""; }
+      else if (c === "\r") { /* skip */ }
+      else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+      else field += c;
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows.filter((r) => !(r.length === 1 && r[0].trim() === ""));
+}
+
+function parseFile(file) {
+  return new Promise((resolve, reject) => {
+    const ext = file.name.split(".").pop().toLowerCase();
+    if (ext !== "csv") {
+      reject(new Error("Only .csv files are supported here. In Excel or Sheets, use File > Save As / Download > CSV, then re-upload."));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const rows = parseCSV(String(reader.result));
+        if (!rows.length) { resolve({ headers: [], rows: [] }); return; }
+        const headers = rows[0];
+        const dataRows = rows.slice(1).map((r) => {
+          const obj = {};
+          headers.forEach((h, idx) => { obj[h] = r[idx] !== undefined ? r[idx] : ""; });
+          return obj;
+        });
+        resolve({ headers, rows: dataRows });
+      } catch (err) { reject(err); }
+    };
+    reader.onerror = () => reject(new Error("Could not read the file."));
+    reader.readAsText(file);
+  });
+}
+
+/* ---------------------------------------------------------------- */
+/* State                                                             */
+/* ---------------------------------------------------------------- */
+
+const state = {
+  roster: JSON.parse(JSON.stringify(SAMPLE_ROSTER)),
+  goals: { ...DEFAULT_GOALS },
+  frontBarRoster: JSON.parse(JSON.stringify(SAMPLE_FRONTBAR_ROSTER)),
+  frontBarGoals: { ...DEFAULT_FRONTBAR_GOALS },
+  salesData: { ...JSON.parse(JSON.stringify(SAMPLE_SALES)), ...JSON.parse(JSON.stringify(SAMPLE_FRONTBAR_SALES)) },
+  dailyRetailLog: {},
+  adminOpen: false,
+  banner: null,
+  pending: null,
+  dragOver: false,
+  _lastResetApplied: "0000-00-00",
+};
+
+function loadPersisted() {
+  try {
+    const s = localStorage.getItem("ff-settings-emeryville");
+    if (s) {
+      const parsed = JSON.parse(s);
+      if (parsed.goals) state.goals = parsed.goals;
+      if (parsed.roster) state.roster = parsed.roster;
+      if (parsed.frontBarGoals) state.frontBarGoals = parsed.frontBarGoals;
+      if (parsed.frontBarRoster) state.frontBarRoster = parsed.frontBarRoster;
+      if (parsed._lastResetApplied) state._lastResetApplied = parsed._lastResetApplied;
+      if (parsed.dailyRetailLog) state.dailyRetailLog = parsed.dailyRetailLog;
+    }
+  } catch (e) { /* keep defaults */ }
+
+  // One-time migration: browsers that saved frontBarGoals before Front Bar
+  // switched to flat per-person targets still have the OLD shape (a
+  // "service" key, and pooled-weighted dollar amounts like $6,000/$12,000).
+  // Detect that old shape - a fresh save under the new model never has a
+  // "service" key - and silently reset to the new flat defaults ($170
+  // retail / 2 memberships per person). This only fires once per browser;
+  // after this runs, saveSettings() persists the new shape and this check
+  // is a no-op from then on.
+  if (state.frontBarGoals && Object.prototype.hasOwnProperty.call(state.frontBarGoals, "service")) {
+    state.frontBarGoals = { ...DEFAULT_FRONTBAR_GOALS };
+    saveSettings();
+  }
+  try {
+    const d = localStorage.getItem("ff-sales-data-emeryville");
+    if (d) {
+      const parsed = JSON.parse(d);
+      // Wrapped shape is { asOf, data }. Older/legacy saves were the raw
+      // sales object with no asOf - treat those as very old so any real
+      // scheduled snapshot supersedes them.
+      if (parsed && typeof parsed === "object" && "data" in parsed) {
+        state.salesData = parsed.data || {};
+        state._salesAsOf = parsed.asOf || "0000-00-00";
+      } else {
+        state.salesData = parsed;
+        state._salesAsOf = "0000-00-00";
+      }
+    }
+  } catch (e) { /* keep defaults */ }
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem("ff-settings-emeryville", JSON.stringify({
+      goals: state.goals,
+      roster: state.roster,
+      frontBarGoals: state.frontBarGoals,
+      frontBarRoster: state.frontBarRoster,
+      _lastResetApplied: state._lastResetApplied,
+      dailyRetailLog: state.dailyRetailLog,
+    }));
+  } catch (e) { console.error("Could not save settings", e); }
+}
+function saveSalesData() {
+  try {
+    localStorage.setItem("ff-sales-data-emeryville", JSON.stringify({
+      asOf: state._salesAsOf || new Date().toISOString().slice(0, 10),
+      data: state.salesData,
+    }));
+  } catch (e) { console.error("Could not save sales data", e); }
+}
+
+/* ---------------------------------------------------------------- */
+/* Daily snapshot (scheduled auto-refresh)                           */
+/* ---------------------------------------------------------------- */
+
+// Merges DAILY_SNAPSHOT.sales into state the same way a manual CSV upload
+// would (auto-adding any new employees to the roster as Part-Time), but
+// only if the snapshot is actually newer than whatever's already loaded -
+// a same-day-or-later manual upload always wins over the morning's
+// automatic pull so nobody's manual correction gets silently clobbered.
+function applyDailySnapshotIfNewer() {
+  if (!DAILY_SNAPSHOT || !DAILY_SNAPSHOT.asOf) return; // no scheduled run has populated this yet
+  const cachedAsOf = state._salesAsOf || "0000-00-00";
+  if (DAILY_SNAPSHOT.asOf <= cachedAsOf) return;
+
+  const nextSales = { ...state.salesData };
+  const nextRoster = [...state.roster];
+  // Check names against BOTH teams so a Front Bar person already tracked
+  // over there never gets duplicated into the main roster too.
+  const rosterNames = new Set(
+    [...state.roster, ...state.frontBarRoster].map((r) => r.name.trim().toLowerCase())
+  );
+  let updatedCount = 0, addedCount = 0;
+
+  Object.entries(DAILY_SNAPSHOT.sales).forEach(([rawName, rec]) => {
+    const name = String(rawName || "").trim();
+    if (!name) return;
+    nextSales[name] = {
+      service: Number(rec && rec.service) || 0,
+      retail: Number(rec && rec.retail) || 0,
+      membership: Number(rec && rec.membership) || 0,
+    };
+    updatedCount += 1;
+    if (!rosterNames.has(name.toLowerCase())) {
+      nextRoster.push({ id: "auto-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7), name, type: "PT" });
+      rosterNames.add(name.toLowerCase());
+      addedCount += 1;
+    }
+  });
+
+  state.salesData = nextSales;
+  state.roster = nextRoster;
+  state._salesAsOf = DAILY_SNAPSHOT.asOf;
+  state.banner = {
+    type: "success",
+    text: "Updated automatically with Boulevard data through " + DAILY_SNAPSHOT.asOf + " (" +
+      updatedCount + " esthetician" + (updatedCount === 1 ? "" : "s") +
+      (addedCount > 0 ? ", " + addedCount + " new" : "") + ").",
+  };
+  saveSettings();
+  saveSalesData();
+}
+
+// Merges the injected DAILY_RETAIL_LOG dict into state.dailyRetailLog. The
+// injector script always sends the FULL accumulated history for the
+// current month (it reads whatever was already in the deployed HTML and
+// adds one new day each run), so this is a safe union merge - injected
+// values win for any date they contain, nothing already in state is ever
+// silently dropped.
+function applyDailyRetailLogIfNewer() {
+  if (!DAILY_RETAIL_LOG || typeof DAILY_RETAIL_LOG !== "object") return;
+  const keys = Object.keys(DAILY_RETAIL_LOG);
+  if (!keys.length) return;
+  state.dailyRetailLog = { ...state.dailyRetailLog, ...DAILY_RETAIL_LOG };
+  saveSettings();
+}
+
+/* ---------------------------------------------------------------- */
+/* Month reset (Emeryville Dashboard Month Reset skill)              */
+/* ---------------------------------------------------------------- */
+
+// Applies an injected MONTH_RESET payload once, the first time it's newer
+// than whatever reset (if any) was already applied in this browser. Wipes
+// ALL sales figures and REPLACES both rosters wholesale (not a merge, unlike
+// the daily snapshot) - this is meant to start a brand-new month from
+// scratch. Monthly Goals for both teams are deliberately left untouched so
+// they roll over month to month.
+function applyMonthResetIfNewer() {
+  if (!MONTH_RESET || !MONTH_RESET.asOf) return; // no reset has been run yet
+  const lastApplied = state._lastResetApplied || "0000-00-00";
+  if (MONTH_RESET.asOf <= lastApplied) return;
+
+  const toRosterEntry = (prefix) => (r, idx) => ({
+    id: prefix + "-" + Date.now() + "-" + idx,
+    name: String((r && r.name) || "").trim(),
+    type: (r && r.type) === "FT" ? "FT" : "PT",
+  });
+
+  state.roster = (MONTH_RESET.mainRoster || []).map(toRosterEntry("reset-main"));
+  state.frontBarRoster = (MONTH_RESET.frontBarRoster || []).map(toRosterEntry("reset-fb"));
+  state.salesData = {}; // fresh month - zero every sales figure
+  state.dailyRetailLog = {}; // fresh month - clear the daily $500 push calendar too
+  state._salesAsOf = MONTH_RESET.asOf;
+  state._lastResetApplied = MONTH_RESET.asOf;
+  state.banner = {
+    type: "success",
+    text: "Started a new month (" + MONTH_RESET.asOf + "): reset to " +
+      state.roster.length + " Esthetician/Manager" + (state.roster.length === 1 ? "" : "s") +
+      " and " + state.frontBarRoster.length + " Front Bar team member" + (state.frontBarRoster.length === 1 ? "" : "s") +
+      ". Monthly Goals were left as-is.",
+  };
+  saveSettings();
+  saveSalesData();
+}
+
+/* ---------------------------------------------------------------- */
+/* Derived data                                                      */
+/* ---------------------------------------------------------------- */
+
+// mode "weighted" (default, main team): individual goal = (team goal ÷
+// total weight) × this person's weight (FT counts double).
+// mode "flat" (Front Bar): individual goal = the same fixed per-person
+// number for everyone, FT or PT alike - no weighting/pooling at all.
+function computeEmployees(roster, goals, expectedPct, categories, mode) {
+  categories = categories || CATEGORY_META;
+  mode = mode || "weighted";
+  const totalWeight = roster.reduce((sum, e) => sum + (WEIGHTS[e.type] || 1), 0);
+  return roster.map((emp) => {
+    const weight = WEIGHTS[emp.type] || 1;
+    const record = state.salesData[emp.name] || { service: 0, retail: 0, membership: 0 };
+    const cats = {};
+    Object.keys(categories).forEach((cat) => {
+      const individualGoal = mode === "flat"
+        ? (goals[cat] || 0)
+        : (totalWeight > 0 ? (goals[cat] / totalWeight) * weight : 0);
+      const current = record[cat] || 0;
+      const pct = individualGoal > 0 ? (current / individualGoal) * 100 : 0;
+      const status = getStatusLabel(pct, expectedPct);
+      const delta = current - individualGoal;
+      cats[cat] = { current, goal: individualGoal, pct, status, delta };
+    });
+    return { ...emp, weight, categories: cats };
+  });
+}
+
+// mode "flat" team goal = per-person target × headcount (so the team KPI
+// card scales automatically as Front Bar people are added/removed).
+function computeTotals(employees, goals, expectedPct, categories, mode) {
+  categories = categories || CATEGORY_META;
+  mode = mode || "weighted";
+  const t = {};
+  Object.keys(categories).forEach((cat) => {
+    const current = employees.reduce((sum, e) => sum + e.categories[cat].current, 0);
+    const goal = mode === "flat" ? (goals[cat] || 0) * employees.length : goals[cat];
+    const pct = goal > 0 ? (current / goal) * 100 : 0;
+    const status = getStatusLabel(pct, expectedPct);
+    t[cat] = { current, goal, pct, status };
+  });
+  return t;
+}
+
+function computeTopPerformers(employees) {
+  const t = {};
+  Object.keys(CATEGORY_META).forEach((cat) => {
+    let best = null;
+    employees.forEach((e) => {
+      const val = e.categories[cat].current;
+      if (val > 0 && (!best || val > best.value)) best = { name: e.name, value: val };
+    });
+    t[cat] = best;
+  });
+  return t;
+}
+
+/* ---------------------------------------------------------------- */
+/* Actions                                                           */
+/* ---------------------------------------------------------------- */
+
+function applyRows(rows, mapping) {
+  const nameKey = mapping.name;
+  if (!nameKey) {
+    state.banner = { type: "error", text: "No name column was mapped. Please try again." };
+    render();
+    return;
+  }
+  const nextSales = { ...state.salesData };
+  const nextRoster = [...state.roster];
+  // Check names against BOTH teams so a Front Bar person already tracked
+  // over there never gets duplicated into the main roster too.
+  const rosterNames = new Set(
+    [...state.roster, ...state.frontBarRoster].map((r) => r.name.trim().toLowerCase())
+  );
+  let updatedCount = 0, addedCount = 0, skippedCount = 0;
+
+  rows.forEach((row) => {
+    const rawName = row[nameKey];
+    const name = String(rawName || "").trim();
+    if (!name) { skippedCount += 1; return; }
+    const existing = nextSales[name] || { service: 0, retail: 0, membership: 0 };
+    const updated = { ...existing };
+    ["service", "retail", "membership"].forEach((cat) => {
+      if (mapping[cat]) updated[cat] = parseNumber(row[mapping[cat]]);
+    });
+    nextSales[name] = updated;
+    updatedCount += 1;
+
+    if (!rosterNames.has(name.toLowerCase())) {
+      nextRoster.push({ id: "auto-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7), name, type: "PT" });
+      rosterNames.add(name.toLowerCase());
+      addedCount += 1;
+    }
+  });
+
+  state.salesData = nextSales;
+  state.roster = nextRoster;
+  state._salesAsOf = new Date().toISOString().slice(0, 10);
+
+  let text = "Updated " + updatedCount + " esthetician" + (updatedCount === 1 ? "" : "s") + ".";
+  if (addedCount > 0) text += " Added " + addedCount + " new team member" + (addedCount === 1 ? "" : "s") + " (set to Part-Time by default — adjust in Settings).";
+  if (skippedCount > 0) text += " Skipped " + skippedCount + " row" + (skippedCount === 1 ? "" : "s") + " with no name.";
+  state.banner = { type: "success", text };
+  state.pending = null;
+  saveSettings();
+  saveSalesData();
+  render();
+}
+
+async function handleFile(file) {
+  state.banner = null;
+  try {
+    const { headers, rows } = await parseFile(file);
+    if (!headers.length || !rows.length) {
+      state.banner = { type: "error", text: "That file looks empty. Please check it has a header row and at least one data row." };
+      render();
+      return;
+    }
+    const mapping = autoMapColumns(headers);
+    const hasMetric = mapping.service || mapping.retail || mapping.membership;
+    if (mapping.name && hasMetric) {
+      applyRows(rows, mapping);
+    } else {
+      state.pending = { fileName: file.name, headers, rows, mapping };
+      render();
+    }
+  } catch (err) {
+    state.banner = { type: "error", text: "Could not read that file: " + (err.message || "unknown error") };
+    render();
+  }
+}
+
+function updateGoal(team, cat, value) {
+  const key = team === "frontbar" ? "frontBarGoals" : "goals";
+  state[key] = { ...state[key], [cat]: Math.max(0, parseNumber(value)) };
+  saveSettings();
+  render();
+}
+function updateEmployee(team, id, field, value) {
+  const key = team === "frontbar" ? "frontBarRoster" : "roster";
+  state[key] = state[key].map((e) => (e.id === id ? { ...e, [field]: value } : e));
+  saveSettings();
+  render();
+}
+function removeEmployee(team, id) {
+  const key = team === "frontbar" ? "frontBarRoster" : "roster";
+  state[key] = state[key].filter((e) => e.id !== id);
+  saveSettings();
+  render();
+}
+function addEmployee(team) {
+  const key = team === "frontbar" ? "frontBarRoster" : "roster";
+  state[key] = [...state[key], { id: "manual-" + Date.now(), name: "New Team Member", type: "PT" }];
+  saveSettings();
+  render();
+}
+function loadSampleData() {
+  state.roster = JSON.parse(JSON.stringify(SAMPLE_ROSTER));
+  state.goals = { ...DEFAULT_GOALS };
+  state.frontBarRoster = JSON.parse(JSON.stringify(SAMPLE_FRONTBAR_ROSTER));
+  state.frontBarGoals = { ...DEFAULT_FRONTBAR_GOALS };
+  state.salesData = { ...JSON.parse(JSON.stringify(SAMPLE_SALES)), ...JSON.parse(JSON.stringify(SAMPLE_FRONTBAR_SALES)) };
+  state.banner = { type: "success", text: "Sample data restored." };
+  saveSettings();
+  saveSalesData();
+  render();
+}
+function clearData() {
+  const cleared = {};
+  [...state.roster, ...state.frontBarRoster].forEach((e) => { cleared[e.name] = { service: 0, retail: 0, membership: 0 }; });
+  state.salesData = cleared;
+  state.banner = { type: "success", text: "All sales figures cleared. Goals and rosters kept." };
+  saveSalesData();
+  render();
+}
+
+/* ---------------------------------------------------------------- */
+/* Render                                                            */
+/* ---------------------------------------------------------------- */
+
+function renderHeader(today, monthLabel, dim, expectedPct) {
+  return (
+    '<div class="ff-header">' +
+      '<div>' +
+        '<div class="ff-brand-eyebrow">Face Foundrié Emeryville · ' + escapeHtml(monthLabel) + '</div>' +
+        '<h1 class="ff-brand-title ff-serif">Emeryville Live Performance Dashboard</h1>' +
+        '<div class="ff-brand-sub">Day ' + today.getDate() + ' of ' + dim + ' · ' + Math.round(expectedPct) + '% of the month elapsed</div>' +
+      '</div>' +
+      '<div class="ff-actions">' +
+        '<input type="file" id="ff-file-input" accept=".csv" style="display:none">' +
+        '<button class="ff-btn ff-btn-primary" data-action="upload-click">' + icon("upload", 15) + ' Upload Sales Report</button>' +
+        '<button class="ff-btn" data-action="open-settings">' + icon("settings", 15) + ' Settings</button>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function renderBanner() {
+  const b = state.banner;
+  return (
+    '<div class="ff-banner ' + b.type + '">' +
+      (b.type === "success" ? icon("checkCircle2", 16) : icon("alertCircle", 16)) +
+      '<span>' + escapeHtml(b.text) + '</span>' +
+      '<button data-action="close-banner">' + icon("x", 14) + '</button>' +
+    '</div>'
+  );
+}
+
+function renderDropzone() {
+  return (
+    '<div class="ff-dropzone ' + (state.dragOver ? "drag" : "") + '">' +
+      '<div class="ff-dropzone-icon">' + icon("upload", 18) + '</div>' +
+      '<div class="ff-dropzone-text"><b>Drag & drop</b> your Month-to-Date BLVD sales report here, or use the Upload button above. Accepts .csv with Service Sales, Retail Sales, and Memberships Sold columns — extra columns are ignored.</div>' +
+    '</div>'
+  );
+}
+
+function renderTopStrip(topPerformers) {
+  return (
+    '<div class="ff-top-strip">' +
+      Object.entries(CATEGORY_META).map(([cat, meta]) => {
+        const top = topPerformers[cat];
+        return (
+          '<div class="ff-top-card">' +
+            '<div class="ff-top-card-label">' + icon("award", 13) + ' Top ' + meta.label + '</div>' +
+            (top
+              ? '<div class="ff-top-card-name ff-serif">' + escapeHtml(top.name) + '</div><div class="ff-top-card-value">' + formatValue(top.value, meta.format) + '</div>'
+              : '<div class="ff-top-card-empty">No sales recorded yet</div>') +
+          '</div>'
+        );
+      }).join("") +
+    '</div>'
+  );
+}
+
+function renderMainGrid(employees, totals, expectedPct, cardTitle, categories) {
+  categories = categories || CATEGORY_META;
+  return (
+    '<div class="ff-grid">' +
+      '<div class="ff-card">' +
+        '<h2 class="ff-card-title">' + escapeHtml(cardTitle || "Esthetician Snapshot") + '</h2>' +
+        (employees.length === 0
+          ? '<div class="ff-top-card-empty">No team members yet. Add some in Settings.</div>'
+          : employees.map((e) => (
+              '<div class="ff-roster-row">' +
+                '<div class="ff-roster-name">' +
+                  '<div class="ff-avatar">' + escapeHtml(e.name.split(" ").map((p) => p[0] || "").slice(0, 2).join("").toUpperCase()) + '</div>' +
+                  '<span>' + escapeHtml(e.name) + '<span class="ff-roster-type">' + e.type + '</span></span>' +
+                '</div>' +
+                Object.keys(categories).map((cat) => (
+                  '<div class="ff-roster-kpi">' +
+                    '<div class="ff-roster-kpi-value">' + formatValue(e.categories[cat].current, categories[cat].format) + '</div>' +
+                    '<div class="ff-roster-kpi-label">' + categories[cat].label.split(" ")[0] + '</div>' +
+                  '</div>'
+                )).join("") +
+              '</div>'
+            )).join("")) +
+      '</div>' +
+      '<div class="ff-kpi-summary">' +
+        Object.entries(categories).map(([cat, meta]) => (
+          '<div class="ff-kpi-card">' +
+            '<div class="ff-kpi-card-top">' +
+              '<span class="ff-kpi-card-label">' + meta.label + '</span>' +
+              '<span class="ff-status-pill" style="background:' + STATUS_STYLE[totals[cat].status].bg + '; color:' + STATUS_STYLE[totals[cat].status].fg + ';">' + totals[cat].status + '</span>' +
+            '</div>' +
+            '<div class="ff-kpi-card-value ff-serif">' + formatValue(totals[cat].current, meta.format) + '</div>' +
+            '<div class="ff-kpi-card-goal">of ' + formatValue(totals[cat].goal, meta.format) + ' goal · ' + Math.round(totals[cat].pct) + '%</div>' +
+          '</div>'
+        )).join("") +
+        '<div class="ff-pace-card">' +
+          '<div class="ff-pace-title">Monthly Pace</div>' +
+          Object.entries(categories).map(([cat, meta]) => (
+            '<div style="margin-bottom:12px;">' +
+              '<div class="ff-pace-row"><span>' + meta.label + '</span><span>' + Math.round(totals[cat].pct) + '% vs ' + Math.round(expectedPct) + '% expected</span></div>' +
+              '<div class="ff-pace-track">' +
+                '<div class="ff-pace-fill" style="width:' + Math.min(100, totals[cat].pct) + '%;"></div>' +
+                '<div class="ff-pace-marker" style="left:' + expectedPct + '%;"></div>' +
+              '</div>' +
+            '</div>'
+          )).join("") +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function renderProgressSections(employees, goals, categories, mode) {
+  categories = categories || CATEGORY_META;
+  mode = mode || "weighted";
+  return Object.entries(categories).map(([cat, meta]) => (
+    '<div class="ff-section">' +
+      '<div class="ff-section-head">' +
+        '<h3 class="ff-section-title">' + meta.label + '</h3>' +
+        '<span class="ff-section-goal">' + (mode === "flat"
+          ? ("Per person: " + formatValue(goals[cat], meta.format) + " · Team total: " + formatValue((goals[cat] || 0) * employees.length, meta.format) + " (" + employees.length + " " + (employees.length === 1 ? "person" : "people") + ")")
+          : ("Team goal: " + formatValue(goals[cat], meta.format) + " · Weighted by FT (2x) / PT (1x)")
+        ) + '</span>' +
+      '</div>' +
+      employees.map((e) => {
+        const c = e.categories[cat];
+        const style = STATUS_STYLE[c.status];
+        return (
+          '<div class="ff-progress-row">' +
+            '<div class="ff-progress-name">' + escapeHtml(e.name) + ' <span class="ff-roster-type">' + e.type + '</span></div>' +
+            '<div class="ff-progress-detail">' +
+              '<div class="ff-petal-track"><div class="ff-petal-fill" style="width:' + Math.min(100, c.pct) + '%; background:' + (c.pct >= 100 ? "var(--gold)" : "var(--sage)") + ';"></div></div>' +
+              '<span class="ff-progress-pct">' + Math.round(c.pct) + '%</span>' +
+            '</div>' +
+            '<div style="display:flex; align-items:center; gap:10px; justify-self:end;">' +
+              '<div class="ff-progress-numbers">' + formatValue(c.current, meta.format) + ' of ' + formatValue(c.goal, meta.format) + ' · ' + (c.delta >= 0 ? formatValue(c.delta, meta.format) + " ahead" : formatValue(-c.delta, meta.format) + " to go") + '</div>' +
+              '<span class="ff-status-pill" style="background:' + style.bg + '; color:' + style.fg + ';">' + c.status + '</span>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join("") +
+    '</div>'
+  )).join("");
+}
+
+function renderDrawer() {
+  return (
+    '<div class="ff-drawer-backdrop" data-action="close-settings"></div>' +
+    '<div class="ff-drawer">' +
+      '<div class="ff-drawer-head">' +
+        '<h3 class="ff-drawer-title">Settings</h3>' +
+        '<button class="ff-drawer-close" data-action="close-settings">' + icon("x", 16) + '</button>' +
+      '</div>' +
+      '<div class="ff-drawer-section">' +
+        '<div class="ff-drawer-label">Monthly Goals · Estheticians/Managers</div>' +
+        Object.entries(CATEGORY_META).map(([cat, meta]) => (
+          '<div class="ff-drawer-goal-row">' +
+            '<label>' + meta.label + '</label>' +
+            '<input class="ff-input ff-input-goal" type="number" value="' + state.goals[cat] + '" data-team="main" data-goal-cat="' + cat + '">' +
+          '</div>'
+        )).join("") +
+      '</div>' +
+      '<div class="ff-drawer-section">' +
+        '<div class="ff-drawer-label">Esthetician/Manager Roster &amp; Weighting</div>' +
+        state.roster.map((emp) => (
+          '<div class="ff-roster-edit-row">' +
+            '<input class="ff-input" value="' + escapeHtml(emp.name) + '" data-team="main" data-emp-id="' + emp.id + '" data-emp-field="name">' +
+            '<div class="ff-toggle">' +
+              '<button class="' + (emp.type === "FT" ? "active" : "") + '" data-action="set-emp-type" data-team="main" data-emp-id="' + emp.id + '" data-value="FT">FT</button>' +
+              '<button class="' + (emp.type === "PT" ? "active" : "") + '" data-action="set-emp-type" data-team="main" data-emp-id="' + emp.id + '" data-value="PT">PT</button>' +
+            '</div>' +
+            '<button class="ff-icon-btn" data-action="remove-employee" data-team="main" data-emp-id="' + emp.id + '">' + icon("trash2", 15) + '</button>' +
+          '</div>'
+        )).join("") +
+        '<button class="ff-btn ff-btn-ghost" data-action="add-employee" data-team="main" style="margin-top:6px;">' + icon("plus", 14) + ' Add team member</button>' +
+        '<div style="font-size:12px; color:var(--charcoal-soft); margin-top:10px; display:flex; gap:6px;">' +
+          icon("info", 13) +
+          '<span>Full-time counts double toward each goal. Individual goal = (monthly goal ÷ total weight) × employee weight.</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="ff-drawer-section">' +
+        '<div class="ff-drawer-label">Per-Person Targets · Front Bar</div>' +
+        Object.entries(FRONTBAR_CATEGORY_META).map(([cat, meta]) => (
+          '<div class="ff-drawer-goal-row">' +
+            '<label>' + meta.label + '</label>' +
+            '<input class="ff-input ff-input-goal" type="number" value="' + state.frontBarGoals[cat] + '" data-team="frontbar" data-goal-cat="' + cat + '">' +
+          '</div>'
+        )).join("") +
+        '<div style="font-size:12px; color:var(--charcoal-soft); margin-top:2px; display:flex; gap:6px;">' +
+          icon("info", 13) +
+          '<span>Same flat target for every Front Bar person - Full-Time and Part-Time are not weighted differently here.</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="ff-drawer-section">' +
+        '<div class="ff-drawer-label">Front Bar Roster</div>' +
+        state.frontBarRoster.map((emp) => (
+          '<div class="ff-roster-edit-row">' +
+            '<input class="ff-input" value="' + escapeHtml(emp.name) + '" data-team="frontbar" data-emp-id="' + emp.id + '" data-emp-field="name">' +
+            '<div class="ff-toggle">' +
+              '<button class="' + (emp.type === "FT" ? "active" : "") + '" data-action="set-emp-type" data-team="frontbar" data-emp-id="' + emp.id + '" data-value="FT">FT</button>' +
+              '<button class="' + (emp.type === "PT" ? "active" : "") + '" data-action="set-emp-type" data-team="frontbar" data-emp-id="' + emp.id + '" data-value="PT">PT</button>' +
+            '</div>' +
+            '<button class="ff-icon-btn" data-action="remove-employee" data-team="frontbar" data-emp-id="' + emp.id + '">' + icon("trash2", 15) + '</button>' +
+          '</div>'
+        )).join("") +
+        '<button class="ff-btn ff-btn-ghost" data-action="add-employee" data-team="frontbar" style="margin-top:6px;">' + icon("plus", 14) + ' Add team member</button>' +
+      '</div>' +
+      '<div class="ff-drawer-section">' +
+        '<div class="ff-drawer-label">Data</div>' +
+        '<div style="display:flex; gap:8px; flex-wrap:wrap;">' +
+          '<button class="ff-btn" data-action="load-sample">' + icon("sparkles", 14) + ' Load sample data</button>' +
+          '<button class="ff-btn" data-action="clear-data">' + icon("rotateCcw", 14) + ' Clear sales figures</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function renderMappingModal() {
+  const p = state.pending;
+  return (
+    '<div class="ff-mapping-modal-backdrop">' +
+      '<div class="ff-mapping-modal">' +
+        '<h3 class="ff-drawer-title" style="margin-bottom:6px;">Match your columns</h3>' +
+        '<p style="font-size:13.5px; color:var(--charcoal-soft); margin-bottom:18px;">We couldn\'t automatically recognize the columns in <b>' + escapeHtml(p.fileName) + '</b>. Match them below — extra columns will be ignored.</p>' +
+        '<div class="ff-mapping-field">' +
+          '<label>Employee Name</label>' +
+          '<select class="ff-input" data-mapping-field="name">' +
+            '<option value="">Select column…</option>' +
+            p.headers.map((h) => '<option value="' + escapeHtml(h) + '" ' + (p.mapping.name === h ? "selected" : "") + '>' + escapeHtml(h) + '</option>').join("") +
+          '</select>' +
+        '</div>' +
+        Object.entries(CATEGORY_META).map(([cat, meta]) => (
+          '<div class="ff-mapping-field">' +
+            '<label>' + meta.label + '</label>' +
+            '<select class="ff-input" data-mapping-field="' + cat + '">' +
+              '<option value="">Not in this file</option>' +
+              p.headers.map((h) => '<option value="' + escapeHtml(h) + '" ' + (p.mapping[cat] === h ? "selected" : "") + '>' + escapeHtml(h) + '</option>').join("") +
+            '</select>' +
+          '</div>'
+        )).join("") +
+        '<div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">' +
+          '<button class="ff-btn" data-action="cancel-mapping">Cancel</button>' +
+          '<button class="ff-btn ff-btn-primary" data-action="apply-mapping">Apply &amp; Import</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function renderTeamDivider(title, subtitle) {
+  return (
+    '<div style="margin: 32px 0 18px; padding-top: 14px; border-top: 2px solid var(--stone-dark);">' +
+      '<h2 class="ff-serif" style="font-size:24px; font-weight:600; margin:0;">' + escapeHtml(title) + '</h2>' +
+      (subtitle ? '<div style="font-size:13px; color:var(--charcoal-soft); margin-top:4px;">' + escapeHtml(subtitle) + '</div>' : "") +
+    '</div>'
+  );
+}
+
+// One circle per day of the current month, green if that day's COMBINED
+// (Estheticians + Managers + Front Bar, not just Front Bar) retail sales
+// hit DAILY_RETAIL_TARGET, red if the day has data but missed it, and a
+// neutral outline for days with no data yet (future days, or days before
+// the daily download has run). Front Bar is responsible for pushing the
+// whole team to hit this every day, so it lives under their section.
+function renderDailyRetailCalendar(today, dim) {
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const days = [];
+  for (let d = 1; d <= dim; d++) {
+    const iso = year + "-" + String(month + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+    const hasData = Object.prototype.hasOwnProperty.call(state.dailyRetailLog, iso);
+    const value = hasData ? state.dailyRetailLog[iso] : null;
+    const hit = hasData && value >= DAILY_RETAIL_TARGET;
+    days.push({ d, iso, hasData, value, hit });
+  }
+  return (
+    '<div class="ff-section">' +
+      '<div class="ff-section-head">' +
+        '<h3 class="ff-section-title">Daily $' + DAILY_RETAIL_TARGET + ' Retail Push</h3>' +
+        '<span class="ff-section-goal">Whole store (Estheticians + Managers + Front Bar) combined, per day</span>' +
+      '</div>' +
+      '<div class="ff-daily-calendar">' +
+        days.map((day) => (
+          '<div class="ff-daily-dot ' + (day.hasData ? (day.hit ? "hit" : "miss") : "pending") + '" ' +
+            'title="' + day.iso + (day.hasData ? (": " + formatValue(day.value, "currency") + " retail") : ": no data yet") + '">' +
+            day.d +
+          '</div>'
+        )).join("") +
+      '</div>' +
+      '<div style="font-size:12px; color:var(--charcoal-soft); margin-top:12px; display:flex; gap:14px; flex-wrap:wrap;">' +
+        '<span><span class="ff-daily-legend-dot hit"></span> $' + DAILY_RETAIL_TARGET + '+ hit</span>' +
+        '<span><span class="ff-daily-legend-dot miss"></span> Missed</span>' +
+        '<span><span class="ff-daily-legend-dot pending"></span> No data yet</span>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function render() {
+  const today = new Date();
+  const monthLabel = today.toLocaleString("default", { month: "long", year: "numeric" });
+  const dim = daysInMonth(today.getFullYear(), today.getMonth());
+  const expectedPct = Math.min(100, (today.getDate() / dim) * 100);
+
+  const employees = computeEmployees(state.roster, state.goals, expectedPct, CATEGORY_META, "weighted");
+  const totals = computeTotals(employees, state.goals, expectedPct, CATEGORY_META, "weighted");
+  const topPerformers = computeTopPerformers(employees);
+
+  const fbEmployees = computeEmployees(state.frontBarRoster, state.frontBarGoals, expectedPct, FRONTBAR_CATEGORY_META, "flat");
+  const fbTotals = computeTotals(fbEmployees, state.frontBarGoals, expectedPct, FRONTBAR_CATEGORY_META, "flat");
+
+  const html = (
+    '<div class="ff-dash">' +
+      '<div class="ff-wrap">' +
+        renderHeader(today, monthLabel, dim, expectedPct) +
+        (state.banner ? renderBanner() : "") +
+        renderDropzone() +
+        renderTopStrip(topPerformers) +
+        renderMainGrid(employees, totals, expectedPct, "Esthetician Snapshot", CATEGORY_META) +
+        renderProgressSections(employees, state.goals, CATEGORY_META, "weighted") +
+        renderTeamDivider("Front Bar", "Tracked separately from Estheticians/Managers - flat per-person targets, no FT/PT weighting.") +
+        renderMainGrid(fbEmployees, fbTotals, expectedPct, "Front Bar Snapshot", FRONTBAR_CATEGORY_META) +
+        renderProgressSections(fbEmployees, state.frontBarGoals, FRONTBAR_CATEGORY_META, "flat") +
+        renderDailyRetailCalendar(today, dim) +
+        '<div class="ff-footer-note">Goals are recalculated automatically whenever the roster, weights, or monthly targets change in Settings.</div>' +
+      '</div>' +
+      (state.adminOpen ? renderDrawer() : "") +
+      (state.pending ? renderMappingModal() : "") +
+    '</div>'
+  );
+
+  root.innerHTML = html;
+}
+
+/* ---------------------------------------------------------------- */
+/* Event delegation                                                  */
+/* ---------------------------------------------------------------- */
+
+const root = document.getElementById("root");
+
+root.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const action = el.dataset.action;
+  if (action === "upload-click") {
+    const input = document.getElementById("ff-file-input");
+    if (input) input.click();
+  } else if (action === "open-settings") {
+    state.adminOpen = true; render();
+  } else if (action === "close-settings") {
+    state.adminOpen = false; render();
+  } else if (action === "close-banner") {
+    state.banner = null; render();
+  } else if (action === "remove-employee") {
+    removeEmployee(el.dataset.team || "main", el.dataset.empId);
+  } else if (action === "add-employee") {
+    addEmployee(el.dataset.team || "main");
+  } else if (action === "load-sample") {
+    loadSampleData();
+  } else if (action === "clear-data") {
+    clearData();
+  } else if (action === "set-emp-type") {
+    updateEmployee(el.dataset.team || "main", el.dataset.empId, "type", el.dataset.value);
+  } else if (action === "cancel-mapping") {
+    state.pending = null; render();
+  } else if (action === "apply-mapping") {
+    applyRows(state.pending.rows, state.pending.mapping);
+  }
+});
+
+root.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.id === "ff-file-input") {
+    const file = t.files && t.files[0];
+    if (file) handleFile(file);
+    t.value = "";
+    return;
+  }
+  if (t.dataset.goalCat) { updateGoal(t.dataset.team || "main", t.dataset.goalCat, t.value); return; }
+  if (t.dataset.empField === "name") { updateEmployee(t.dataset.team || "main", t.dataset.empId, "name", t.value); return; }
+  if (t.dataset.mappingField) {
+    state.pending = { ...state.pending, mapping: { ...state.pending.mapping, [t.dataset.mappingField]: t.value } };
+    render();
+    return;
+  }
+});
+
+root.addEventListener("dragover", (e) => {
+  const dz = e.target.closest(".ff-dropzone");
+  if (dz) {
+    e.preventDefault();
+    if (!state.dragOver) { state.dragOver = true; render(); }
+  }
+});
+root.addEventListener("dragleave", (e) => {
+  const dz = e.target.closest(".ff-dropzone");
+  if (dz && state.dragOver) { state.dragOver = false; render(); }
+});
+root.addEventListener("drop", (e) => {
+  const dz = e.target.closest(".ff-dropzone");
+  if (dz) {
+    e.preventDefault();
+    state.dragOver = false;
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) handleFile(file); else render();
+  }
+});
+
+/* ---------------------------------------------------------------- */
+/* Init                                                              */
+/* ---------------------------------------------------------------- */
+
+loadPersisted();
+applyMonthResetIfNewer();
+applyDailySnapshotIfNewer();
+applyDailyRetailLogIfNewer();
+render();
+</script>
+</body>
+</html>
