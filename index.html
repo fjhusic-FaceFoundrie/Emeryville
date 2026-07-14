@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Emeryville Facefoundrie Dashboard",
+  "schemaVersion": 1,
+  "description": "Emeryville FACE FOUNDRIÉ live performance dashboard: upload a month-to-date Boulevard sales CSV (or drag/drop) to auto-map columns and update esthetician service/retail/membership progress against weighted monthly goals (FT=2x, PT=1x). Includes a Settings drawer for goals and roster, top-performer callouts, and a monthly pace tracker. All data is stored locally in the browser (no external connectors) and persists between visits."
+}
+</script>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -392,19 +398,6 @@ function loadPersisted() {
       if (parsed.dailyRetailLog) state.dailyRetailLog = parsed.dailyRetailLog;
     }
   } catch (e) { /* keep defaults */ }
-
-  // One-time migration: browsers that saved frontBarGoals before Front Bar
-  // switched to flat per-person targets still have the OLD shape (a
-  // "service" key, and pooled-weighted dollar amounts like $6,000/$12,000).
-  // Detect that old shape - a fresh save under the new model never has a
-  // "service" key - and silently reset to the new flat defaults ($170
-  // retail / 2 memberships per person). This only fires once per browser;
-  // after this runs, saveSettings() persists the new shape and this check
-  // is a no-op from then on.
-  if (state.frontBarGoals && Object.prototype.hasOwnProperty.call(state.frontBarGoals, "service")) {
-    state.frontBarGoals = { ...DEFAULT_FRONTBAR_GOALS };
-    saveSettings();
-  }
   try {
     const d = localStorage.getItem("ff-sales-data-emeryville");
     if (d) {
