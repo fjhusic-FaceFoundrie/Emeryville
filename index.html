@@ -191,7 +191,7 @@ const SAMPLE_FRONTBAR_SALES = {};
    string; sales keys match the roster's "First Last" name format. Until
    the first scheduled run happens, asOf stays null and the dashboard
    behaves exactly as before (sample data / manual upload only). */
-const DAILY_SNAPSHOT = {"asOf": "2026-07-14", "sales": {"Allison Boen": {"service": 0.0, "retail": 239.8, "membership": 1}, "Anaya Bonavente": {"service": 1273.91, "retail": 0.0, "membership": 0}, "Ashley Giron": {"service": 914.03, "retail": 0.0, "membership": 0}, "Bella Cruz": {"service": 0.0, "retail": 433.6, "membership": 2}, "Bryn McGowan": {"service": 1836.31, "retail": 0.0, "membership": 0}, "Evelin Sandoval": {"service": 3097.83, "retail": 0.0, "membership": 0}, "Hazel Anthony": {"service": 0.0, "retail": 317.0, "membership": 0}, "Ilianna Simental": {"service": 0.0, "retail": 149.8, "membership": 0}, "Janelle Ramos": {"service": 0.0, "retail": 150.0, "membership": 2}, "Jenna Daher": {"service": 0.0, "retail": 1289.0, "membership": 4}, "Kim Anderson": {"service": 1033.66, "retail": 0.0, "membership": 0}, "Laila Anderson": {"service": 2833.45, "retail": 0.0, "membership": 0}, "Lauren Vinyard": {"service": 0.0, "retail": 216.7, "membership": 1}, "Lyric Brown": {"service": 3941.9, "retail": 0.0, "membership": 0}, "Macie Kimball": {"service": 0.0, "retail": 0.0, "membership": 0}, "Madison Stewart": {"service": 0.0, "retail": 130.5, "membership": 1}, "Miranda Alvarado": {"service": 0.0, "retail": 14.4, "membership": 1}, "Phlisha Pierce": {"service": 0.0, "retail": 1123.9, "membership": 3}, "Shauntelle Turner": {"service": 0.0, "retail": 436.4, "membership": 1}, "Sienna Goodrich": {"service": 0.0, "retail": 212.2, "membership": 1}, "Sonu Sunar": {"service": 1042.83, "retail": 0.0, "membership": 0}, "Terrilyn Williams": {"service": 769.17, "retail": 0.0, "membership": 0}, "Tyiemah Dominick": {"service": 2133.91, "retail": 0.0, "membership": 0}, "Veronica Rodriguez": {"service": 0.0, "retail": 308.2, "membership": 0}}};
+const DAILY_SNAPSHOT = {"asOf": "2026-07-15", "sales": {"Anaya Bonavente": {"service": 1273.91, "retail": 212.0, "membership": 1}, "Ashley Giron": {"service": 914.03, "retail": 216.9, "membership": 1}, "Bryn McGowan": {"service": 1836.31, "retail": 34.0, "membership": 1}, "Elena Carlson": {"service": 0.0, "retail": 76.5, "membership": 1}, "Evelin Sandoval": {"service": 3685.96, "retail": 522.8, "membership": 1}, "Isabelle Moes": {"service": 0.0, "retail": 287.3, "membership": 0}, "Kim Anderson": {"service": 1033.66, "retail": 79.2, "membership": 0}, "Laila Anderson": {"service": 3191.01, "retail": 166.19, "membership": 2}, "Lani Gauna": {"service": 0.0, "retail": 420.4, "membership": 1}, "Lyric Brown": {"service": 3941.9, "retail": 499.86, "membership": 2}, "Sonu Sunar": {"service": 1258.03, "retail": 131.4, "membership": 0}, "Terrilyn Williams": {"service": 769.17, "retail": 44.1, "membership": 1}, "Tyiemah Dominick": {"service": 2133.91, "retail": 148.3, "membership": 0}}};
 /* DAILY_SNAPSHOT_END */
 
 /* MONTH_RESET_START - rewritten by the Emeryville Dashboard Month Reset
@@ -208,7 +208,7 @@ const DAILY_SNAPSHOT = {"asOf": "2026-07-14", "sales": {"Allison Boen": {"servic
    with these lists - but leaves both teams' Monthly Goals untouched, since
    goals are meant to roll over from month to month. Until the first reset
    runs, asOf stays null and the dashboard behaves exactly as before. */
-const MONTH_RESET = { asOf: null, mainRoster: [], frontBarRoster: [] };
+const MONTH_RESET = {"asOf": "2026-07-15", "mainRoster": [{"name": "Anaya Bonavente", "type": "PT"}, {"name": "Ashley Giron", "type": "PT"}, {"name": "Bryn McGowan", "type": "PT"}, {"name": "Evelin Sandoval", "type": "FT"}, {"name": "Kim Anderson", "type": "PT"}, {"name": "Laila Anderson", "type": "FT"}, {"name": "Lyric Brown", "type": "FT"}, {"name": "Sonu Sunar", "type": "PT"}, {"name": "Terrilyn Williams", "type": "PT"}, {"name": "Tyiemah Dominick", "type": "PT"}], "frontBarRoster": [{"name": "Elena Carlson", "type": "PT"}, {"name": "Isabelle Moes", "type": "PT"}, {"name": "Lani Gauna", "type": "PT"}, {"name": "Niani Manigo", "type": "PT"}]};
 /* MONTH_RESET_END */
 
 /* DAILY_RETAIL_LOG_START - rewritten automatically each morning by the
@@ -222,7 +222,7 @@ const MONTH_RESET = { asOf: null, mainRoster: [], frontBarRoster: [] };
    snapshots. Cleared automatically when the Emeryville Dashboard Month
    Reset skill runs. Drives the daily $500 push calendar under the Front
    Bar section. */
-const DAILY_RETAIL_LOG = {"2026-07-13": 291.96, "2026-07-14": 2260.05};
+const DAILY_RETAIL_LOG = {"2026-07-13": 291.96, "2026-07-14": 2260.05, "2026-07-15": 0.0};
 /* DAILY_RETAIL_LOG_END */
 
 const FIELD_ALIASES = {
